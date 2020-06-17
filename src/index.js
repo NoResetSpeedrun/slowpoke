@@ -7,7 +7,6 @@ import { handleStreams, flushChannel } from './dispatch';
 const client = new DiscordClient();
 
 client.on('ready', async () => {
-  await flushChannel(client);
   console.log('Ret-2-go!');
 
   const guild = client.guilds.resolve(GUILD_ID);
