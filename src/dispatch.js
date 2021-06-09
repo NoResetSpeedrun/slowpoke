@@ -1,9 +1,11 @@
 import { MessageEmbed } from 'discord.js';
 
-import db from './db';
+import { getCollection } from './db';
 import { STREAM_CHANNEL_ID } from './constants';
 
 export const handleStreams = async (presence, client) => {
+  const streams = await getCollection('streams');
+
   // Get the channel we're going to be posting in
   const newsChannel = await client.channels.fetch(STREAM_CHANNEL_ID);
 
@@ -13,7 +15,7 @@ export const handleStreams = async (presence, client) => {
   const username = presence.member.user.username;
 
   // Get all streams
-  const knownStreams = await db.streams.find({});
+  const knownStreams = await streams.find({}).toArray();
   const currentUserStream = knownStreams.find(s => s.username === username);
 
   if (!isStreaming) {
@@ -23,7 +25,7 @@ export const handleStreams = async (presence, client) => {
         const message = await newsChannel.messages.fetch(currentUserStream.messageId, false);
         message.delete();
 
-        await db.streams.remove(currentUserStream);
+        await streams.findOneAndDelete(currentUserStream);
       }
     } catch (err) {
       console.log('Error deleting messages');
@@ -51,7 +53,7 @@ export const handleStreams = async (presence, client) => {
         .setTimestamp(),
     );
 
-    await db.streams.insert({ username, messageId: message.id });
+    await streams.insertOne({ username, messageId: message.id });
   } catch (err) {
     console.log(`Error notifying about ${username}`);
     console.log(err);
@@ -59,13 +61,15 @@ export const handleStreams = async (presence, client) => {
 };
 
 export const flushChannel = async client => {
+  const streams = await getCollection('streams');
+
   const newsChannel = await client.channels.fetch(STREAM_CHANNEL_ID);
-  const knownStreams = await db.streams.find({});
+  const knownStreams = await streams.find({}).toArray();
 
   for (const stream of knownStreams) {
     const message = await newsChannel.messages.fetch(stream.messageId, false);
     message.delete();
 
-    await db.streams.remove(stream);
+    await streams.remove(stream);
   }
 };
