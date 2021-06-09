@@ -19,4 +19,11 @@ client.on('presenceUpdate', async (oldPresence, newPresence) => {
   await handleStreams(newPresence, client);
 });
 
+client.on('guildMemberAdd', async member => {
+  if (member.user.username.toLowerCase().includes('h0nde')) {
+    console.log('Banning ' + member.user.username);
+    await member.ban();
+  }
+});
+
 client.login(process.env.DISCORD_BOT_TOKEN);
