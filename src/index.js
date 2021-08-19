@@ -28,15 +28,18 @@ client.on('guildMemberAdd', async member => {
 });
 
 client.on("message", msg => {
-  if (msg.content.includes("!newevent")) {
-    const adminRole = msg.guild.roles.find(
-      role => role.name.toLowerCase() === "admin"
-    ) || { id: null };
-    if (msg.member._roles.find(id => id === adminRole.id)) {
-      new EventHandler(client, msg, "new");
-    } else {
-      console.log(`Denied !newevent to user ${msg.author.tag}`);
-    }
+  const PREFIX = "!";
+  //filter the message if it starts with the prefix
+	if (!message.content.startsWith(PREFIX)) return;
+  const input = message.content.slice(PREFIX.length).trim();
+	if (!input.length) return;
+  const [, command, commandArgs] = input.match(/(\w+)\s*([\s\S]*)/);
+
+  //this role is Admins on NoReset's server
+  if (command == "newevent" && message.member.roles.cache.has('240526857861070858')) {
+    new EventHandler(client, message, "new");
+  } else {
+    console.log(`Denied newevent to user ${message.author.tag}`);
   }
 });
 
