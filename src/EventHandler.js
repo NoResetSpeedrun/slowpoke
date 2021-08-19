@@ -1,11 +1,5 @@
-import { MessageEmbed } from 'discord.js';
-
-import { MMM_CHANNEL_ID } from './constants';
-
-export const newEvent = async (presence, client) => {
-  // Get the channel we're going to be posting in
-  const newsChannel = await client.channels.fetch(MMM_CHANNEL_ID);
-
+const moment = require("moment");
+const emoji = require("node-emoji");
 class EventHandler {
   constructor(client, msg, type) {
     this.client = client;
@@ -13,8 +7,12 @@ class EventHandler {
     this.yes = [];
     this.no = [];
     this.maybe = [];
+    this.restOfMessage = null;
 
     if (type === "new") {
+      const input = msg.content.slice("!").trim();
+      const [, command, commandArgs] = input.match(/(\w+)\s*([\s\S]*)/);
+      this.restOfMessage = commandArgs;
       this.createNewEvent(msg);
     } else if (type === "existing") {
       this.message = msg;
@@ -89,13 +87,13 @@ class EventHandler {
 
   generateEmbed() {
     return {
-      color: "16711680",
+      color: 16711680,
       footer: {
         text: `React with ${emoji.get("thumbsup")}, ${emoji.get(
           "thumbsdown"
         )}, ${emoji.get(
           "question"
-        )} in order to declare your attendance to this event.`
+        )} in order to declare your attendance to "${this.restOfMessage}".`
       },
       fields: [
         {
@@ -105,7 +103,7 @@ class EventHandler {
         },
         {
           inline: true,
-          name: `${emoji.get("thumnbsdown")} No (${
+          name: `${emoji.get("thumbsdown")} No (${
             this.no.length
           })`,
           value: this.displayRole("no")
@@ -150,7 +148,7 @@ class EventHandler {
 
   async editMessage() {
     await this.message.edit(
-      `Last edit : ${moment().format("Do MMMM, HH:mm:ss")}`,
+      `@here Attendance check is up for "${this.restOfMessage}" \n Last edit : ${moment().format("Do MMMM, HH:mm:ss")}`,
       {
         embed: this.generateEmbed()
       }
@@ -160,7 +158,7 @@ class EventHandler {
 
   async createNewEvent(msg) {
     this.message = await msg.channel.send(
-      `Last edit : ${moment().format("Do MMMM, HH:mm:ss")}`,
+      `@here Attendance check is up for "${this.restOfMessage}" \n Last edit : ${moment().format("Do MMMM, HH:mm:ss")}`,
       { embed: this.generateEmbed() }
     );
     await this.message.react(emoji.get("thumbsup"));
