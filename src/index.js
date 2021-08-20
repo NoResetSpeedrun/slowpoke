@@ -3,9 +3,9 @@ import { Client as DiscordClient } from 'discord.js';
 
 import { GUILD_ID } from './constants';
 import { handleStreams, flushChannel } from './dispatch';
+import EventHandler from './EventHandler';
 
 const client = new DiscordClient();
-const EventHandler = require('./EventHandler');
 
 client.on('ready', async () => {
   console.log('Ret-2-go!');

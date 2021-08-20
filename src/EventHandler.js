@@ -1,5 +1,6 @@
-const moment = require('moment');
-const emoji = require('node-emoji');
+import moment from 'moment';
+import emoji from 'node-emoji';
+
 class EventHandler {
   constructor(client, msg, type) {
     this.client = client;
@@ -33,6 +34,7 @@ class EventHandler {
           })
           .filter(e => e);
       });
+
     await this.message.reactions
       .get(emoji.get('thumbsdown'))
       .fetchUsers()
@@ -44,6 +46,7 @@ class EventHandler {
           })
           .filter(e => e);
       });
+
     await this.message.reactions
       .get(emoji.get('question'))
       .fetchUsers()
@@ -55,6 +58,7 @@ class EventHandler {
           })
           .filter(e => e);
       });
+
     this.editMessage();
     console.log(`Hooking up existing event, ID ${this.message.id}`);
   }
@@ -179,4 +183,4 @@ class EventHandler {
   }
 }
 
-module.exports = EventHandler;
+export default EventHandler;
