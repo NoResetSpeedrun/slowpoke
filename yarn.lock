@@ -3458,6 +3458,13 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"lodash@npm:^4.17.21":
+  version: 4.17.21
+  resolution: "lodash@npm:4.17.21"
+  checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7
+  languageName: node
+  linkType: hard
+
 "lowercase-keys@npm:^1.0.0, lowercase-keys@npm:^1.0.1":
   version: 1.0.1
   resolution: "lowercase-keys@npm:1.0.1"
@@ -3803,6 +3810,15 @@ fsevents@~2.3.1:
     snapdragon: ^0.8.1
     to-regex: ^3.0.1
   checksum: 54d4166d6ef08db41252eb4e96d4109ebcb8029f0374f9db873bd91a1f896c32ec780d2a2ea65c0b2d7caf1f28d5e1ea33746a470f32146ac8bba821d80d38d8
+  languageName: node
+  linkType: hard
+
+"node-emoji@npm:^1.11.0":
+  version: 1.11.0
+  resolution: "node-emoji@npm:1.11.0"
+  dependencies:
+    lodash: ^4.17.21
+  checksum: e8c856c04a1645062112a72e59a98b203505ed5111ff84a3a5f40611afa229b578c7d50f1e6a7f17aa62baeea4a640d2e2f61f63afc05423aa267af10977fb2b
   languageName: node
   linkType: hard
 
@@ -4545,6 +4561,7 @@ resolve@^1.14.2:
     dotenv: ^10.0.0
     moment: ^2.29.1
     mongodb: ^3.6.9
+    node-emoji: ^1.11.0
     nodemon: ^2.0.7
     prettier: ^2.3.1
     pretty-quick: ^3.1.0
