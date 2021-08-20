@@ -27,7 +27,7 @@ client.on('guildMemberAdd', async member => {
   }
 });
 
-client.on('message', msg => {
+client.on('message', message => {
   const PREFIX = '!';
   //filter the message if it starts with the prefix
   if (!message.content.startsWith(PREFIX)) return;
