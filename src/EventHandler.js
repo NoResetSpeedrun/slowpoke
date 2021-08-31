@@ -1,6 +1,5 @@
 import moment from 'moment';
 import emoji from 'node-emoji';
-
 class EventHandler {
   constructor(client, msg, type) {
     this.client = client;
@@ -34,7 +33,6 @@ class EventHandler {
           })
           .filter(e => e);
       });
-
     await this.message.reactions
       .get(emoji.get('thumbsdown'))
       .fetchUsers()
@@ -46,7 +44,6 @@ class EventHandler {
           })
           .filter(e => e);
       });
-
     await this.message.reactions
       .get(emoji.get('question'))
       .fetchUsers()
@@ -58,7 +55,6 @@ class EventHandler {
           })
           .filter(e => e);
       });
-
     this.editMessage();
     console.log(`Hooking up existing event, ID ${this.message.id}`);
   }
@@ -153,7 +149,7 @@ class EventHandler {
     await this.message.edit(
       `@here Attendance check is up for "${this.restOfMessage}" \n Last edit : ${moment().format(
         'Do MMMM, HH:mm:ss',
-      )}`,
+      )} (GMT)`,
       {
         embed: this.generateEmbed(),
       },
@@ -165,7 +161,7 @@ class EventHandler {
     this.message = await msg.channel.send(
       `@here Attendance check is up for "${this.restOfMessage}" \n Last edit : ${moment().format(
         'Do MMMM, HH:mm:ss',
-      )}`,
+      )} (GMT)`,
       { embed: this.generateEmbed() },
     );
     await this.message.react(emoji.get('thumbsup'));
