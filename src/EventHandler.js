@@ -1,5 +1,5 @@
-const moment = require('moment');
-const emoji = require('node-emoji');
+import moment from 'moment';
+import emoji from 'node-emoji';
 class EventHandler {
   constructor(client, msg, type) {
     this.client = client;
@@ -179,4 +179,4 @@ class EventHandler {
   }
 }
 
-module.exports = EventHandler;
+export default EventHandler;
