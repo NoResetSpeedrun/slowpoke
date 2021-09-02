@@ -42,16 +42,18 @@ export const handleStreams = async (presence, client) => {
   }
 
   try {
-    const message = await newsChannel.send(
-      new MessageEmbed()
-        .setColor('#be1337')
-        .setTitle(username)
-        .setURL(streamActivity.url)
-        .setThumbnail(streamActivity.assets.largeImageURL())
-        .setDescription(streamActivity.details)
-        .addFields({ name: 'GAME:', value: streamActivity.state })
-        .setTimestamp(),
-    );
+    const message = await newsChannel.send({
+      embeds: [
+        new MessageEmbed()
+          .setColor('#be1337')
+          .setTitle(username)
+          .setURL(streamActivity.url)
+          .setThumbnail(streamActivity.assets.largeImageURL())
+          .setDescription(streamActivity.details)
+          .addFields({ name: 'GAME:', value: streamActivity.state })
+          .setTimestamp(),
+      ],
+    });
 
     await streams.insertOne({ username, messageId: message.id });
   } catch (err) {

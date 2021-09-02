@@ -18,7 +18,7 @@
     "pretty-quick": "^3.1.0"
   },
   "dependencies": {
-    "discord.js": "^12.5.3",
+    "discord.js": "^13.1.0",
     "dotenv": "^10.0.0",
     "moment": "^2.29.1",
     "mongodb": "^3.6.9",

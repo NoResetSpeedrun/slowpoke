@@ -1,5 +1,6 @@
 import moment from 'moment';
 import emoji from 'node-emoji';
+
 class EventHandler {
   constructor(client, msg, type) {
     this.client = client;
@@ -158,12 +159,12 @@ class EventHandler {
   }
 
   async createNewEvent(msg) {
-    this.message = await msg.channel.send(
-      `@here Attendance check is up for "${this.restOfMessage}" \n Last edit : ${moment().format(
-        'Do MMMM, HH:mm:ss',
-      )} (GMT)`,
-      { embed: this.generateEmbed() },
-    );
+    this.message = await msg.channel.send({
+      content: `@here Attendance check is up for "${
+        this.restOfMessage
+      }" \n Last edit : ${moment().format('Do MMMM, HH:mm:ss')} (GMT)`,
+      embeds: [this.generateEmbed()],
+    });
     await this.message.react(emoji.get('thumbsup'));
     await this.message.react(emoji.get('thumbsdown'));
     await this.message.react(emoji.get('question'));
