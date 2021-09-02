@@ -1,11 +1,21 @@
 import './environment';
-import { Client as DiscordClient } from 'discord.js';
+import { Client as DiscordClient, Intents } from 'discord.js';
 
 import { GUILD_ID } from './constants';
 import { handleStreams, flushChannel } from './dispatch';
 import EventHandler from './EventHandler';
 
-const client = new DiscordClient();
+const client = new DiscordClient({
+  intents: [
+    Intents.FLAGS.GUILDS,
+    Intents.FLAGS.GUILD_MEMBERS,
+    Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS,
+    Intents.FLAGS.GUILD_INTEGRATIONS,
+    Intents.FLAGS.GUILD_PRESENCES,
+    Intents.FLAGS.GUILD_MESSAGES,
+    Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+  ],
+});
 
 client.on('ready', async () => {
   console.log('Ret-2-go!');

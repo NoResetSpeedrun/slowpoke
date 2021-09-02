@@ -147,14 +147,12 @@ class EventHandler {
   }
 
   async editMessage() {
-    await this.message.edit(
-      `@here Attendance check is up for "${this.restOfMessage}" \n Last edit : ${moment().format(
-        'Do MMMM, HH:mm:ss',
-      )} (GMT)`,
-      {
-        embed: this.generateEmbed(),
-      },
-    );
+    await this.message.edit({
+      content: `@here Attendance check is up for "${
+        this.restOfMessage
+      }" \n Last edit : ${moment().format('Do MMMM, HH:mm:ss')} (GMT)`,
+      embeds: [this.generateEmbed()],
+    });
     console.log(`Edited event ${this.message.id}`);
   }
 

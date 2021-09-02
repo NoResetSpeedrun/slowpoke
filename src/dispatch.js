@@ -4,6 +4,9 @@ import { getCollection } from './db';
 import { STREAM_CHANNEL_ID } from './constants';
 
 export const handleStreams = async (presence, client) => {
+  if (presence === null) {
+    return;
+  }
   const streams = await getCollection('streams');
 
   // Get the channel we're going to be posting in
@@ -29,7 +32,9 @@ export const handleStreams = async (presence, client) => {
       console.log('Error deleting messages');
       console.log(err);
     } finally {
-      await streams.findOneAndDelete(currentUserStream);
+      if (currentUserStream) {
+        await streams.findOneAndDelete(currentUserStream);
+      }
     }
 
     // Nothing more we need to do
