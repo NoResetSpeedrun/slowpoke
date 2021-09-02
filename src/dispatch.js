@@ -24,12 +24,12 @@ export const handleStreams = async (presence, client) => {
       if (currentUserStream) {
         const message = await newsChannel.messages.fetch(currentUserStream.messageId, false);
         message.delete();
-
-        await streams.findOneAndDelete(currentUserStream);
       }
     } catch (err) {
       console.log('Error deleting messages');
       console.log(err);
+    } finally {
+      await streams.findOneAndDelete(currentUserStream);
     }
 
     // Nothing more we need to do
