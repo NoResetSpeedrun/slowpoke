@@ -6,6 +6,11 @@ platform:
   os: linux
   arch: arm64
 
+trigger:
+  event:
+    include:
+      - pull_request
+
 steps:
   - name: Prettier
     image: node:latest
