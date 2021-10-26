@@ -1,11 +1,6 @@
-const Sequelize = require('sequelize');
+import Sequelize from 'sequelize';
 
-const sequelize = new Sequelize('database', 'username', 'password', {
-  host: 'localhost',
-  dialect: 'sqlite',
-  logging: false,
-  storage: 'database.sqlite',
-});
+const sequelize = new Sequelize('sqlite:/code/data.db');
 
 //hint on how to declare new tables
 //const Listcount = require('./models/Listcount')(sequelize, Sequelize.DataTypes);
