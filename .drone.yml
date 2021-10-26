@@ -1,0 +1,19 @@
+kind: pipeline
+type: docker
+name: Linting
+
+platform:
+  os: linux
+  arch: arm64
+
+trigger:
+  event:
+    include:
+      - push
+
+steps:
+  - name: Prettier
+    image: node:latest
+    commands:
+      - yarn install
+      - yarn prettier --check src/**/*.js
