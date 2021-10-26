@@ -1,13 +1,12 @@
 import { MessageEmbed } from 'discord.js';
 
-import { getCollection } from './db';
+import { Stream } from './db';
 import { STREAM_CHANNEL_ID } from './constants';
 
 export const handleStreams = async (presence, client) => {
   if (presence === null) {
     return;
   }
-  const streams = await getCollection('streams');
 
   // Get the channel we're going to be posting in
   const newsChannel = await client.channels.fetch(STREAM_CHANNEL_ID);
@@ -18,7 +17,7 @@ export const handleStreams = async (presence, client) => {
   const username = presence.member.user.username;
 
   // Get all streams
-  const knownStreams = await streams.find({}).toArray();
+  const knownStreams = await Stream.findAll();
   const currentUserStream = knownStreams.find(s => s.username === username);
 
   if (!isStreaming) {
@@ -33,7 +32,7 @@ export const handleStreams = async (presence, client) => {
       console.log(err);
     } finally {
       if (currentUserStream) {
-        await streams.findOneAndDelete(currentUserStream);
+        await currentUserStream.destroy();
       }
     }
 
@@ -60,23 +59,40 @@ export const handleStreams = async (presence, client) => {
       ],
     });
 
-    await streams.insertOne({ username, messageId: message.id });
+    await Stream.create({ username, messageId: message.id });
   } catch (err) {
     console.log(`Error notifying about ${username}`);
     console.log(err);
   }
 };
 
-export const flushChannel = async client => {
-  const streams = await getCollection('streams');
-
+export const flushInvalidStreams = async client => {
   const newsChannel = await client.channels.fetch(STREAM_CHANNEL_ID);
-  const knownStreams = await streams.find({}).toArray();
+  const knownStreams = await Stream.findAll();
 
   for (const stream of knownStreams) {
-    const message = await newsChannel.messages.fetch(stream.messageId, false);
-    message.delete();
+    try {
+      const message = await newsChannel.messages.fetch(stream.messageId, false);
+    } catch {
+      await stream.destroy();
+    }
+  }
+};
 
-    await streams.remove(stream);
+export const flushOldMessages = async client => {
+  const newsChannel = await client.channels.fetch(STREAM_CHANNEL_ID);
+  const knownStreams = await Stream.findAll();
+  const knownIds = new Set(knownStreams.map(m => m.messageId));
+
+  const oldMessages = (await newsChannel.messages.fetch()).filter(
+    m => m.author.id === client.user.id && !knownIds.has(m.id),
+  );
+
+  for (const message of oldMessages.values()) {
+    try {
+      await message.delete();
+    } catch {
+      // Ignore all errors
+    }
   }
 };

@@ -2,11 +2,8 @@ import './environment';
 import { Client as DiscordClient, Intents } from 'discord.js';
 
 import { GUILD_ID } from './constants';
-import { handleStreams, flushChannel } from './dispatch';
+import { handleStreams, flushInvalidStreams, flushOldMessages } from './dispatch';
 import EventHandler from './EventHandler';
-
-import Sequelize from 'sequelize';
-const sequelize = new Sequelize('sqlite:/code/data.db');
 
 const client = new DiscordClient({
   intents: [
@@ -20,11 +17,21 @@ const client = new DiscordClient({
   ],
 });
 
+const jobs = [flushInvalidStreams, flushOldMessages];
+
 client.on('ready', async () => {
   console.log('Ret-2-go!');
 
   const guild = client.guilds.resolve(GUILD_ID);
   const members = await guild.members.fetch();
+
+  setInterval(async () => {
+    for (const job of jobs) {
+      try {
+        await job(client);
+      } catch {}
+    }
+  }, 2500);
 
   members.each(m => handleStreams(m.presence, client));
 });
@@ -40,7 +47,7 @@ client.on('guildMemberAdd', async member => {
   }
 });
 
-client.on('message', message => {
+client.on('messageCreate', message => {
   const PREFIX = '!';
   //filter the message if it starts with the prefix
   if (!message.content.startsWith(PREFIX)) return;
