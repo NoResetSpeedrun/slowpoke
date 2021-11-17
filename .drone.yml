@@ -13,7 +13,8 @@ trigger:
 
 steps:
   - name: Prettier
-    image: node:latest
+    image: node:alpine
     commands:
+      - apk add musl-dev sqlite sqlite-dev python2 gcc make
       - yarn install
       - yarn prettier --check src/**/*.js
